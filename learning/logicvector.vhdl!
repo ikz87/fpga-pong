@@ -1,0 +1,30 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity logicvectortb is 
+end entity;
+
+architecture sim of logicvectortb is 
+    -- Declaration of an 8bit vector
+    signal sigvec1 : std_logic_vector(7 downto 0);
+
+    -- Another declaration, now with all bits initialized as 0 
+    signal sigvec2 : std_logic_vector(7 downto 0) := (others => '0');
+    
+    -- Now with all bits initialized as 1
+    signal sigvec3 : std_logic_vector(7 downto 0) := (others => '1');
+
+    -- Now we initialize the vector as hex (not recommended as it is 
+    -- dependant on the vector's length)
+    signal sigvec4 : std_logic_vector(7 downto 0) := x"AA";
+
+    -- Similar as hex, but in binary
+    signal sigvec5 : std_logic_vector(7 downto 0) := "10101010";
+    
+begin
+    process is 
+    begin
+        
+        wait for 10 ns;
+    end process;
+end architecture;
