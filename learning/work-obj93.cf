@@ -1,40 +1,61 @@
 v 4
-file . "senslist.vhdl" "97b302a548e0da15f22dc2905d69713f081b277e" "20221115053558.836":
-  entity senslisttb at 1( 0) + 0 on 53;
-  architecture sim of senslisttb at 7( 129) + 0 on 54;
-file . "while.vhdl" "b108b7dccde06b1855832b20ab18b73c307e9139" "20221114042748.185":
-  entity whiletb at 1( 0) + 0 on 37;
-  architecture sim of whiletb at 4( 32) + 0 on 38;
-file . "wait_statement.vhdl" "eed64861b624a5ea2eee8250655101bb618bebb8" "20221114030951.102":
-  entity waittb at 1( 0) + 0 on 13;
-  architecture sim of waittb at 4( 31) + 0 on 14;
-file . "hello_world.vhdl" "8f2c2bc0c6c9511c14fdaf6714d2ff34c2b88bff" "20221114030357.798":
-  entity helloworldtb at 1( 0) + 0 on 11;
-  architecture sim of helloworldtb at 4( 37) + 0 on 12;
-file . "loop.vhdl" "da7e47ad3e19f1e869243cf8104efff50f2048e2" "20221114031851.046":
-  entity looptb at 1( 0) + 0 on 17;
-  architecture sim of looptb at 4( 31) + 0 on 18;
-file . "forloop.vhdl" "73d61be68fa041fc4bdf474ad796acc10373a89a" "20221114032251.169":
-  entity forlooptb at 1( 0) + 0 on 21;
-  architecture sim of forlooptb at 4( 34) + 0 on 22;
-file . "fizzbuzz.vhdl" "0405be2d272270fb8da4bedc4423ea7a680da2ad" "20221114042140.769":
-  entity fizzbuzz at 1( 0) + 0 on 35;
-  architecture sim of fizzbuzz at 6( 55) + 0 on 36;
-file . "signals.vhd" "dbaaf410371e402d0514b8c5a5df3c31c9eaf7f6" "20221114044621.493":
-  entity signalstb at 1( 0) + 0 on 41;
-  architecture sim of signalstb at 4( 34) + 0 on 42;
-file . "waitonuntil.vhdl" "eefcb5ff541f7db679c6d59cd913329523d7fe32" "20221114055650.691":
-  entity waitonuntiltb at 1( 0) + 0 on 49;
-  architecture sim of waitonuntiltb at 4( 38) + 0 on 50;
-file . "ifelse.vhdl" "54f2538bd1d5011790911d51a1f47ae4898fe043" "20221114060036.916":
-  entity ifelsetb at 1( 0) + 0 on 51;
-  architecture sim of ifelsetb at 4( 33) + 0 on 52;
-file . "stdlogic.vhdl" "8b1741ab157c79fea7c02f2a35eb5ecee9824c1b" "20221115060739.044":
-  entity stdlogictb at 1( 0) + 0 on 59;
-  architecture sim of stdlogictb at 7( 79) + 0 on 60;
-file . "signedunsigned.vhdl" "589705610f252849445aa469dadaa69d4b4677cb" "20221115072710.022":
-  entity signedunsignedtb at 1( 0) + 0 on 89;
-  architecture sim of signedunsignedtb at 8( 111) + 0 on 90;
+file . "clockedprocesstb.vhdl" "5b3bb8398574250b04aea6dfd2e08827121f4f0a" "20221116003718.109":
+  entity clockedprocesstb at 1( 0) + 0 on 127;
+  architecture sim of clockedprocesstb at 9( 112) + 0 on 128;
+file . "genericmapstb.vhdl" "ab9b26a4de8fbf0739bc0673a481bbb3d6020cfb" "20221115225803.941":
+  entity genericmaptb at 1( 0) + 0 on 121;
+  architecture sim of genericmaptb at 8( 107) + 0 on 122;
+file . "mux.vhdl" "2aaa63318638f3988266fa42f208ad29025e1e57" "20221115213333.079":
+  entity mux at 1( 0) + 0 on 107;
+  architecture behav of mux at 18( 347) + 0 on 108;
+file . "casewhen.vhdl" "e3b42c586c1041986e9063db111f949b5ab518f6" "20221115202856.840":
+  entity casewhentb at 1( 0) + 0 on 105;
+  architecture sim of casewhentb at 8( 105) + 0 on 106;
 file . "concurrent.vhdl" "453b597761f3eb82c9b9c46081d69b2d0b620ac6" "20221115080850.573":
   entity concurrenttb at 1( 0) + 0 on 101;
   architecture sim of concurrenttb at 8( 107) + 0 on 102;
+file . "signedunsigned.vhdl" "589705610f252849445aa469dadaa69d4b4677cb" "20221115072710.022":
+  entity signedunsignedtb at 1( 0) + 0 on 89;
+  architecture sim of signedunsignedtb at 8( 111) + 0 on 90;
+file . "stdlogic.vhdl" "8b1741ab157c79fea7c02f2a35eb5ecee9824c1b" "20221115060739.044":
+  entity stdlogictb at 1( 0) + 0 on 59;
+  architecture sim of stdlogictb at 7( 79) + 0 on 60;
+file . "ifelse.vhdl" "54f2538bd1d5011790911d51a1f47ae4898fe043" "20221114060036.916":
+  entity ifelsetb at 1( 0) + 0 on 51;
+  architecture sim of ifelsetb at 4( 33) + 0 on 52;
+file . "waitonuntil.vhdl" "eefcb5ff541f7db679c6d59cd913329523d7fe32" "20221114055650.691":
+  entity waitonuntiltb at 1( 0) + 0 on 49;
+  architecture sim of waitonuntiltb at 4( 38) + 0 on 50;
+file . "signals.vhd" "dbaaf410371e402d0514b8c5a5df3c31c9eaf7f6" "20221114044621.493":
+  entity signalstb at 1( 0) + 0 on 41;
+  architecture sim of signalstb at 4( 34) + 0 on 42;
+file . "fizzbuzz.vhdl" "0405be2d272270fb8da4bedc4423ea7a680da2ad" "20221114042140.769":
+  entity fizzbuzz at 1( 0) + 0 on 35;
+  architecture sim of fizzbuzz at 6( 55) + 0 on 36;
+file . "forloop.vhdl" "73d61be68fa041fc4bdf474ad796acc10373a89a" "20221114032251.169":
+  entity forlooptb at 1( 0) + 0 on 21;
+  architecture sim of forlooptb at 4( 34) + 0 on 22;
+file . "loop.vhdl" "da7e47ad3e19f1e869243cf8104efff50f2048e2" "20221114031851.046":
+  entity looptb at 1( 0) + 0 on 17;
+  architecture sim of looptb at 4( 31) + 0 on 18;
+file . "hello_world.vhdl" "8f2c2bc0c6c9511c14fdaf6714d2ff34c2b88bff" "20221114030357.798":
+  entity helloworldtb at 1( 0) + 0 on 11;
+  architecture sim of helloworldtb at 4( 37) + 0 on 12;
+file . "wait_statement.vhdl" "eed64861b624a5ea2eee8250655101bb618bebb8" "20221114030951.102":
+  entity waittb at 1( 0) + 0 on 13;
+  architecture sim of waittb at 4( 31) + 0 on 14;
+file . "while.vhdl" "b108b7dccde06b1855832b20ab18b73c307e9139" "20221114042748.185":
+  entity whiletb at 1( 0) + 0 on 37;
+  architecture sim of whiletb at 4( 32) + 0 on 38;
+file . "senslist.vhdl" "97b302a548e0da15f22dc2905d69713f081b277e" "20221115053558.836":
+  entity senslisttb at 1( 0) + 0 on 53;
+  architecture sim of senslisttb at 7( 129) + 0 on 54;
+file . "portmaptb.vhdl" "e5cc8e8d58ad2a7449ed268ab489b34a21053607" "20221115214012.714":
+  entity portmaptb at 1( 0) + 0 on 111;
+  architecture sim of portmaptb at 8( 104) + 0 on 112;
+file . "genericmux.vhdl" "111132f9115c312d04d71b18bef3120f95207101" "20221115223725.243":
+  entity genericmux at 1( 0) + 0 on 113;
+  architecture behav of genericmux at 21( 445) + 0 on 114;
+file . "flipflop.vhdl" "2451ea6031a4bb2b7ed86138cb1622b8571c7d3f" "20221116003459.438":
+  entity flipflop at 1( 0) + 0 on 125;
+  architecture rtl of flipflop at 14( 218) + 0 on 126;
