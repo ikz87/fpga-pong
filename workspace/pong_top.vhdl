@@ -19,19 +19,20 @@ entity pongtop is
         
     -- Player 2 
     p2up : in std_logic;
-    p2down : in std_logic);
+    p2down : in std_logic;
 
-    -- Position outputs 
-    p1ypos : out integer; 
-    p2ypos : out integer; 
-    ballxpos : out integer;
-    ballypos : out integer;
+    -- Position inooutputs 
+    p1ypos : inout integer; 
+    p2ypos : inout integer; 
+    ballxpos : inout integer;
+    ballypos : inout integer);
 
 end entity;
 
-architecture rtl of pong is 
+architecture rtl of pongtop is 
 
     function bittoint (logic : std_logic) return integer is 
+    begin
         if logic = '1' then
             return 1;
         else
@@ -50,13 +51,14 @@ architecture rtl of pong is
     constant p1xpos : integer := 20;
     constant p2xpos : integer := screenwidth - 20;
     constant pheight : integer := screenwidth / 4;
-    variable ballxspeed : integer := 3; 
-    variable ballyspeed : integer := 3; 
-    variable playerpreypos : integer;
-    variable ballprexpos : integer;
-    variable ballpreypos : integer;
-begin
+    begin
     process(clk) is 
+    -- Screen dimension dependant variables
+        variable ballxspeed : integer := 3; 
+        variable ballyspeed : integer := 3; 
+        variable playerpreypos : integer;
+        variable ballprexpos : integer;
+        variable ballpreypos : integer;
     begin
         if rising_edge(clk) then
             if nrst = '0' then 
@@ -72,11 +74,11 @@ begin
                 playerpreypos := p1ypos - playerspeed * bittoint(p1up)
                                 + playerspeed * bittoint(p1down);
                 -- Then we make sure the position signal stays between the boundary
-                -- of 0 and screenheight - playerheight
+                -- of 0 and screenheight - pheight
                 if playerpreypos < 0 then 
                     p1ypos <= 0;
-                elsif playerpreypos > screenheight - playerheight then 
-                    p1ypos <= screenheight - playerheight;
+                elsif playerpreypos > screenheight - pheight then 
+                    p1ypos <= screenheight - pheight;
                 else
                     p1ypos <= playerpreypos;
                 end if;
@@ -87,8 +89,8 @@ begin
                                 + playerspeed * bittoint(p1down);
                 if playerpreypos < 0 then 
                     p2ypos <= 0;
-                elsif playerpreypos > screenheight - playerheight then 
-                    p2ypos <= screenheight - playerheight;
+                elsif playerpreypos > screenheight - pheight then 
+                    p2ypos <= screenheight - pheight;
                 else
                     p2ypos <= playerpreypos;
                 end if;
@@ -100,21 +102,21 @@ begin
                 -- a surface. We will achieve this by first updating and 
                 -- normalizing its position as we did with the players, and
                 -- recalculating the velocity afterwards
-
-                -- ballypos  
+                -- We start with the y position
                 ballpreypos := ballypos + ballyspeed;
 
                 if ballpreypos < 0 then
                     ballypos <= 0;
                     -- Everytime the ball hits a vertical boundary
-                    -- We invert its speed
-                    ballyspeed := ballyspeed * -1; 
-
-
-                ballyspeed := 
-                
-
+                    -- we invert its y speed
+                    ballyspeed := - ballyspeed; 
+                elsif ballpreypos > screenheight then
+                    ballypos <= screenheight;
+                    ballyspeed := - ballyspeed; 
+                else
+                    ballypos <= ballpreypos;
+                end if;
             end if;
-        end if;
-
-        
+        end if; 
+    end process;
+end architecture;
