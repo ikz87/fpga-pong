@@ -131,7 +131,7 @@ architecture behav of pongtop is
                 -- As for the X position, the boundary check is a bit 
                 -- more complex since it depends on both the ball's x 
                 -- position and either of the players y position 
-                -- Focusing in the case for the leftmost boundery (player 1)
+                -- Focusing in the case for the leftmost boundary (player 1)
                 -- we will first check if the ball is about to enter the 
                 -- region behind the player
                 ballprexpos := ballxpos + ballxspeed;
