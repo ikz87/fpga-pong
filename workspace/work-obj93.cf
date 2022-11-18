@@ -1,4 +1,4 @@
 v 4
-file . "pong_top.vhdl" "0c832067d1de091159043e6a7e324e8f5485c512" "20221117222513.792":
-  entity pongtop at 1( 0) + 0 on 11;
-  architecture rtl of pongtop at 32( 578) + 0 on 12;
+file . "pong_top.vhdl" "78a517bdfe666bcd984854c3b709a3a4cf8e6967" "20221118021525.590":
+  entity pongtop at 1( 0) + 0 on 15;
+  architecture rtl of pongtop at 32( 577) + 0 on 16;

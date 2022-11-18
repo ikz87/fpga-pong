@@ -76,10 +76,10 @@ architecture rtl of pongtop is
                                 + playerspeed * bittoint(p1down);
                 -- Then we make sure the position signal stays between the boundary
                 -- of 0 and screenheight - pheight
-                if playerpreypos < 0 then 
-                    p1preypos <= 0;
-                elsif playerpreypos > screenheight - pheight then 
-                    p1preypos <= screenheight - pheight;
+                if p1preypos < 0 then 
+                    p1preypos := 0;
+                elsif p1preypos > screenheight - pheight then 
+                    p1preypos := screenheight - pheight;
                 end if;
 
                 -- Update player 2 position
@@ -87,9 +87,9 @@ architecture rtl of pongtop is
                 p2preypos := p2ypos - playerspeed * bittoint(p1up)
                                 + playerspeed * bittoint(p1down);
                 if p2preypos < 0 then 
-                    p2preypos <= 0;
-                elsif p2reypos > screenheight - pheight then 
-                    p2preypos <= screenheight - pheight;
+                    p2preypos := 0;
+                elsif p2preypos > screenheight - pheight then 
+                    p2preypos := screenheight - pheight;
                 end if;
 
 
@@ -103,12 +103,12 @@ architecture rtl of pongtop is
                 ballpreypos := ballypos + ballyspeed;
 
                 if ballpreypos < 0 then
-                    ballpreypos <= 0;
+                    ballpreypos := 0;
                     -- Everytime the ball hits a vertical boundary
                     -- we invert its y speed
                     ballyspeed := - ballyspeed; 
                 elsif ballpreypos > screenheight then
-                    ballpreypos <= screenheight;
+                    ballpreypos := screenheight;
                     ballyspeed := - ballyspeed; 
                 end if;
 
@@ -153,6 +153,12 @@ architecture rtl of pongtop is
                     ballpreypos := screenheight / 2;
                     ballxspeed := -ballxspeed;
                 end if;
+                
+                -- Now we pass the information in our buffers to the signals
+                p1ypos <= p1preypos;
+                p2ypos <= p2preypos;
+                ballxpos <= ballprexpos;
+                ballypos <= ballpreypos;
             end if;
         end if; 
     end process;
