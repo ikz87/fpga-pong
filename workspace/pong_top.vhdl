@@ -21,7 +21,7 @@ entity pongtop is
     p2up : in std_logic;
     p2down : in std_logic;
 
-    -- Position inooutputs 
+    -- Position inoutputs 
     p1ypos : inout integer; 
     p2ypos : inout integer; 
     ballxpos : inout integer;
@@ -53,10 +53,11 @@ architecture rtl of pongtop is
     constant pheight : integer := screenwidth / 4;
     begin
     process(clk) is 
-    -- Screen dimension dependant variables
+        -- Redundant variables to make position calculations instant 
+        variable p1preypos : integer;
+        variable p2preypos : integer;
         variable ballxspeed : integer := 3; 
         variable ballyspeed : integer := 3; 
-        variable playerpreypos : integer;
         variable ballprexpos : integer;
         variable ballpreypos : integer;
     begin
@@ -71,28 +72,24 @@ architecture rtl of pongtop is
                 -- player bar, we can do the following:
                 -- First we calculate the position according to 
                 -- speed and inputs into a buffer variable
-                playerpreypos := p1ypos - playerspeed * bittoint(p1up)
+                p1preypos := p1ypos - playerspeed * bittoint(p1up)
                                 + playerspeed * bittoint(p1down);
                 -- Then we make sure the position signal stays between the boundary
                 -- of 0 and screenheight - pheight
                 if playerpreypos < 0 then 
-                    p1ypos <= 0;
+                    p1preypos <= 0;
                 elsif playerpreypos > screenheight - pheight then 
-                    p1ypos <= screenheight - pheight;
-                else
-                    p1ypos <= playerpreypos;
+                    p1preypos <= screenheight - pheight;
                 end if;
 
                 -- Update player 2 position
                 -- We do the exact same for player 2
-                playerpreypos := p2ypos - playerspeed * bittoint(p1up)
+                p2preypos := p2ypos - playerspeed * bittoint(p1up)
                                 + playerspeed * bittoint(p1down);
-                if playerpreypos < 0 then 
-                    p2ypos <= 0;
-                elsif playerpreypos > screenheight - pheight then 
-                    p2ypos <= screenheight - pheight;
-                else
-                    p2ypos <= playerpreypos;
+                if p2preypos < 0 then 
+                    p2preypos <= 0;
+                elsif p2reypos > screenheight - pheight then 
+                    p2preypos <= screenheight - pheight;
                 end if;
 
 
@@ -106,15 +103,55 @@ architecture rtl of pongtop is
                 ballpreypos := ballypos + ballyspeed;
 
                 if ballpreypos < 0 then
-                    ballypos <= 0;
+                    ballpreypos <= 0;
                     -- Everytime the ball hits a vertical boundary
                     -- we invert its y speed
                     ballyspeed := - ballyspeed; 
                 elsif ballpreypos > screenheight then
-                    ballypos <= screenheight;
+                    ballpreypos <= screenheight;
                     ballyspeed := - ballyspeed; 
-                else
-                    ballypos <= ballpreypos;
+                end if;
+
+                -- If the ball hasn't collided with any boundaries
+                -- we just leave the speed as it is
+
+                -- As for the X position, the boundary check is a bit 
+                -- more complex since it depends on both the balls x 
+                -- position and either of the players y position 
+                -- Focusing in the case for the leftmost boundery (player 1)
+                -- we will first check if the ball is about to enter the 
+                -- region behind the player
+                ballprexpos := ballxpos + ballxspeed;
+
+                if ballprexpos < p1xpos and ballprexpos > p1xpos - ballxspeed then 
+                    -- Here we have confirmed that the ball is about to 
+                    -- get behind our player, so we now check if the player
+                    -- is in place to stop it 
+                    if ballpreypos >= p1preypos and 
+                    ballpreypos <= p1preypos + pheight then 
+                        -- Now we handle the collision similarly as we did before
+                        ballprexpos := p1xpos; 
+                        ballxspeed := - ballxspeed;
+                    end if;
+                elsif ballprexpos < 0 then
+                    -- If the ball hits the edge of the screen we reset it to the
+                    -- center and flip its speed
+                    ballprexpos := screenwidth / 2;
+                    ballpreypos := screenheight / 2;
+                    ballxspeed := -ballxspeed;
+                end if;
+
+                -- Now we handle collisions for player 2 in the same manner
+                 if ballprexpos > p2xpos and ballprexpos < p2xpos - ballxspeed then 
+                    if ballpreypos >= p2preypos and 
+                    ballpreypos <= p2preypos + pheight then 
+                        ballprexpos := p2xpos; 
+                        ballxspeed := - ballxspeed;
+                    end if;
+                elsif ballprexpos < 0 then
+                    ballprexpos := screenwidth / 2;
+                    ballpreypos := screenheight / 2;
+                    ballxspeed := -ballxspeed;
                 end if;
             end if;
         end if; 
