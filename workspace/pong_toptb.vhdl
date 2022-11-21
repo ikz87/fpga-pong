@@ -6,7 +6,7 @@ entity pongtoptb is
 end entity;
 
 architecture sim of pongtoptb is 
-    constant clf : integer := 100; -- 100hz
+    constant clf : integer := 10; -- 100hz
     constant clp : time := 1000 ms / clf;
     signal clk : std_logic := '1';
     signal nrst : std_logic := '0';

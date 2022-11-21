@@ -1,0 +1,13 @@
+graphics.vhdl:139:33:@7200ms:(report note): Message 7 is '0''0''0''0''0''0''0''0'
+graphics.vhdl:139:33:@7200ms:(report note): Message 6 is '0''0''0''0''0''0''0''0'
+graphics.vhdl:139:33:@7200ms:(report note): Message 5 is '0''1''0''0''0''0''1''0'
+graphics.vhdl:139:33:@7200ms:(report note): Message 4 is '0''1''0''0''1''0''1''0'
+graphics.vhdl:139:33:@7200ms:(report note): Message 3 is '0''1''0''0''0''0''1''0'
+graphics.vhdl:139:33:@7200ms:(report note): Message 2 is '0''0''0''0''0''0''0''0'
+graphics.vhdl:139:33:@7200ms:(report note): Message 1 is '0''0''0''0''0''0''0''0'
+graphics.vhdl:139:33:@7200ms:(report note): Message 0 is '0''0''0''0''0''0''0''0'
+./pongtoptb:error: index (-1) out of bounds (15 downto 0) at graphics.vhdl:149
+in process .pongtoptb(sim).i_pongtop@pongtop(behav).i_graphics@graphics(behav).P0
+  from: [unknown caller]
+  from: _start at start.S:117
+./pongtoptb:error: simulation failed

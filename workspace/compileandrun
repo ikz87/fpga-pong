@@ -1,6 +1,8 @@
 #!/bin/bash
 
-ghdl -a pong_top.vhdl &&\
+ghdl -a graphics.vhdl &&\
+    ghdl -e graphics &&\
+    ghdl -a pong_top.vhdl &&\
     ghdl -e pongtop &&\
     ghdl -a pong_toptb.vhdl &&\
     ghdl -e pongtoptb &&\
