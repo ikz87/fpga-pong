@@ -48,9 +48,10 @@ architecture behav of pongtop is
     constant screenwidth : integer := 8;
     constant screenheight : integer := 8;
     constant playerspeed : integer := 1;
-    constant p1xpos : integer := 1;
-    constant p2xpos : integer := screenwidth - 2;
     constant pheight : integer := 3;
+    constant mnumber : integer := 2; 
+    constant p1xpos : integer := 1;
+    constant p2xpos : integer := screenwidth*mnumber - 2;
 
     -- Debugging 
     type ballstates is (moving, collidedleft, collidedup, collidedright,
@@ -84,8 +85,8 @@ begin
                 ticks <= 0;
                 p1ypos <= 3;
                 p2ypos <= 3;
-                ballxpos <= 4;
-                ballypos <= 4;
+                ballxpos <= screenwidth*mnumber/2 - 1;
+                ballypos <= screenheight/2 - 1;
                 currballstate <= moving;
                 iclk <= '0';
             else 
@@ -154,7 +155,7 @@ begin
                     -- region behind the player
                     ballprexpos := ballxpos + ballxspeed;
 
-                    if ballprexpos < p1xpos and ballprexpos > p1xpos + ballxspeed then 
+                    if ballprexpos <= p1xpos and ballprexpos > p1xpos + ballxspeed then 
                         -- Here we have confirmed that the ball is about to 
                         -- get behind our player, so we now check if the player
                         -- is in place to stop it 
@@ -169,23 +170,23 @@ begin
                     elsif ballprexpos < 0 then
                         -- If the ball hits the edge of the screen we reset it to the
                         -- center and flip its speed
-                        ballprexpos := screenwidth / 2 - 1;
-                        -- ballpreypos := screenheight / 2 - 1;
+                        ballprexpos := screenwidth*mnumber / 2 - 1;
+                        -- ballpreypos := screenheight*mnumber / 2 - 1;
                         ballxspeed := -ballxspeed;
                         currballstate <= respawned;
                     end if;
 
                     -- Now we handle collisions for player 2 in the same manner
-                    if ballprexpos > p2xpos and ballprexpos < p2xpos + ballxspeed then 
+                    if ballprexpos >= p2xpos and ballprexpos < p2xpos + ballxspeed then 
                         if ballpreypos >= p2preypos and 
                         ballpreypos <= p2preypos + pheight - 1 then 
                             ballprexpos := p2xpos - 1; 
                            ballxspeed := - ballxspeed;
                             currballstate <= collidedright;
                         end if;
-                    elsif ballprexpos > screenwidth - 1 then
-                    ballprexpos := screenwidth / 2 - 1;
-                    -- ballpreypos := screenheight / 2;
+                    elsif ballprexpos > screenwidth*mnumber - 1 then
+                    ballprexpos := screenwidth*mnumber / 2 - 1;
+                    -- ballpreypos := screenheight*mnumber / 2;
                     ballxspeed := -ballxspeed;
                     currballstate <= respawned;
                     end if;

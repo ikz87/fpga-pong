@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity graphics is 
+entity graphics1m is 
     generic(
     -- Clock frequency 
     clf : integer
@@ -29,7 +29,7 @@ port(
 );
 end entity;
 
-architecture behav of graphics is 
+architecture behav of graphics1m is 
     function getaddress (i : integer) return std_logic_vector is
     begin 
         return std_logic_vector( to_unsigned(i, 8));
@@ -48,21 +48,15 @@ architecture behav of graphics is
     -- Screen dimension dependant properties 
     constant screenwidth : integer := 8;    
     constant screenheight : integer := 8;    
-    constant pxpos : integer := 1;    
+    constant p1xpos : integer := 1;    
+    constant p2xpos : integer := screenwidth - 2;    
     constant pheight : integer := 3;
-    constant mnumber : integer := 2;
-    constant mwidth : integer := 16*mnumber-1;
-    constant hmwidth : integer := 8*mnumber-1;
 begin
     process(clk) is
     -- Array to keep track of every row and column    
-    --                      columns    16*m# bit message (address+data)    
-    type matrix is array (7 downto 0, mwidth downto 0) of std_logic;
+    --                      columns    16 bit message (address+data)    
+    type matrix is array (7 downto 0, 15 downto 0) of std_logic;
     variable mymatrix : matrix ;
-
-
-    -- Buffer for SPI adresses 
-    variable currmessadress : std_logic_vector (7 downto 0);
     begin
         if rising_edge(clk) then 
             if nrst = '0' then
@@ -85,10 +79,10 @@ begin
                     if ison = '0' then
                         if iticks = 0 then 
                             NCS <= '0';
-                            MOSI <= turnon((mwidth-iticks) mod 16);
-                        elsif iticks <= mwidth then 
-                            MOSI <= turnon((mwidth-iticks) mod 16);
-                        elsif iticks = mwidth+1 then 
+                            MOSI <= turnon(15 - iticks);
+                        elsif iticks <= 15 then 
+                            MOSI <= turnon(15 - iticks);
+                        elsif iticks = 16 then 
                             NCS <= '1';
                             ison <= '1';
                             iticks <= 0;
@@ -119,51 +113,30 @@ begin
                         -- and the ball position
                             for y in 7 downto 0 loop
                             -- First we set the address
-                                currmessadress := getaddress(y+1);
-                                for mindex in mnumber downto 1 loop
-                                    for bit in 7 downto 0 loop
-                                        mymatrix(y,7+16*(mindex-1)-bit) := currmessadress(bit);
-                                    end loop;
-                                    for bit in 15 downto 8 loop 
-                                        mymatrix(y,16*(mindex-1)+bit) := '0';
-                                    end loop;
-
-                                    for x in 8*mindex-1 downto 8*(mindex-1) loop 
-                                    -- Now we check for both of the ball coords
-                                        if ballypos = y and ballxpos = x then
-                                            mymatrix(y,(x mod 8)+8+16*(mindex-1)) := '1'; 
-                                        end if;
-                                    end loop;
+                                for bit in 7 downto 0 loop
+                                    mymatrix(y,7-bit) := getaddress(y+1)(bit);
+                                end loop;
+                                for bit in 15 downto 8 loop 
+                                    mymatrix(y,bit) := '0';
                                 end loop;
 
                                 -- Now we check if the players are in this y
                                 -- coords
                                 if y >= p1ypos and y < p1ypos+pheight then
-                                    mymatrix(y,8+pxpos) := '1';
+                                    mymatrix(y,8+p1xpos) := '1';
                                 end if;
 
                                 if y >= p2ypos and y < p2ypos+pheight then
-                                    mymatrix(y,16*mnumber-1-pxpos) := '1';
+                                    mymatrix(y,8+p2xpos) := '1';
                                 end if;
 
-                    report "Message " & integer'image(y) & " is " & 
-                    std_logic'image(mymatrix(y,8)) & 
-                    std_logic'image(mymatrix(y,9)) & 
-                    std_logic'image(mymatrix(y,10)) & 
-                    std_logic'image(mymatrix(y,11)) & 
-                    std_logic'image(mymatrix(y,12)) & 
-                    std_logic'image(mymatrix(y,13)) & 
-                    std_logic'image(mymatrix(y,14)) & 
-                    std_logic'image(mymatrix(y,15)) &
-                    std_logic'image(mymatrix(y,24)) & 
-                    std_logic'image(mymatrix(y,25)) & 
-                    std_logic'image(mymatrix(y,26)) & 
-                    std_logic'image(mymatrix(y,27)) & 
-                    std_logic'image(mymatrix(y,28)) & 
-                    std_logic'image(mymatrix(y,29)) & 
-                    std_logic'image(mymatrix(y,30)) & 
-                    std_logic'image(mymatrix(y,31));
-
+                                for x in 7 downto 0 loop 
+                                -- Now we check for both of the ball coords
+                                    if ballypos = y and ballxpos = x then
+                                        mymatrix(y,x+8) := '1'; 
+                                    end if;
+                                end loop;
+                               report "Message " & integer'image(y) & " is " & std_logic'image(mymatrix(y,8)) & std_logic'image(mymatrix(y,9)) & std_logic'image(mymatrix(y,10)) & std_logic'image(mymatrix(y,11)) & std_logic'image(mymatrix(y,12)) & std_logic'image(mymatrix(y,13)) & std_logic'image(mymatrix(y,14)) & std_logic'image(mymatrix(y,15));
                             end loop;
 
                         -- state 2
@@ -172,11 +145,11 @@ begin
                             MOSI <= mymatrix(currow, iticks-1);
 
                         -- state 3 
-                        elsif iticks <= mwidth + 1 then 
+                        elsif iticks <= 16 then 
                             MOSI <= mymatrix(currow, iticks-1);
 
                         -- state 4
-                        elsif iticks = mwidth + 2 then 
+                        elsif iticks = 17 then 
                             NCS <= '1';
                             iticks <= 0;
                             if currow = 7 then 
@@ -184,7 +157,7 @@ begin
                             else 
                                 currow <= currow + 1;
                                 for i in 0 to 7 loop 
-                                    for j in 0 to mwidth loop
+                                    for j in 0 to 15 loop
                                         mymatrix(i,j) := '0';
                                     end loop;
                                 end loop;
