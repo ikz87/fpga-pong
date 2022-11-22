@@ -41,7 +41,7 @@ architecture behav of pongtop is
 
     -- Counting clock ticks 
     signal ticks : integer;
-    signal divisor : integer := 100; 
+    signal divisor : integer := 300; 
 
 
     -- Screen dimension dependant properties

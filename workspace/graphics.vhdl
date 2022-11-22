@@ -38,7 +38,9 @@ architecture behav of graphics is
     -- SPI stuff
     signal currow : integer := 0;
     signal ison : std_logic := '0';
+    signal isable : std_logic := '0';
     constant turnon : std_logic_vector (15 downto 0) := "0000110000000001";
+    constant abilitate : std_logic_vector (15 downto 0) := "0000101100001111";
 
     -- Counting clock ticks
     signal ticks : integer := 0;
@@ -94,6 +96,21 @@ begin
                             iticks <= 0;
                         end if;
                     else
+
+                    -- Then we abilitate multiple rows 
+
+                    if isable = '0' then
+                        if iticks = 0 then 
+                            NCS <= '0';
+                            MOSI <= abilitate((mwidth-iticks) mod 16);
+                        elsif iticks <= mwidth then 
+                            MOSI <= abilitate((mwidth-iticks) mod 16);
+                        elsif iticks = mwidth+1 then 
+                            NCS <= '1';
+                            isable <= '1';
+                            iticks <= 0;
+                        end if;
+                    end if;
                     -- Here we will implement the rest of the communication 
                     -- with the led matrix 
                     -- The whole communication will consist of 4 states
@@ -113,6 +130,10 @@ begin
                     -- (one for each led row). This will be done by adding to a 
                     -- variable called currow each time a message is sent 
                     -- (on state 4)
+                    -- Note that the tick values given in this comment are for
+                    -- controlling exactly 1 led matrix. These numbers can 
+                    -- change depending on the number of matrices used
+
                     -- state 1 
                         if iticks = 0 then
                         -- We change mymatrix according to the player positions 
@@ -146,23 +167,23 @@ begin
                                     mymatrix(y,16*mnumber-1-pxpos) := '1';
                                 end if;
 
-                    report "Message " & integer'image(y) & " is " & 
-                    std_logic'image(mymatrix(y,8)) & 
-                    std_logic'image(mymatrix(y,9)) & 
-                    std_logic'image(mymatrix(y,10)) & 
-                    std_logic'image(mymatrix(y,11)) & 
-                    std_logic'image(mymatrix(y,12)) & 
-                    std_logic'image(mymatrix(y,13)) & 
-                    std_logic'image(mymatrix(y,14)) & 
-                    std_logic'image(mymatrix(y,15)) &
-                    std_logic'image(mymatrix(y,24)) & 
-                    std_logic'image(mymatrix(y,25)) & 
-                    std_logic'image(mymatrix(y,26)) & 
-                    std_logic'image(mymatrix(y,27)) & 
-                    std_logic'image(mymatrix(y,28)) & 
-                    std_logic'image(mymatrix(y,29)) & 
-                    std_logic'image(mymatrix(y,30)) & 
-                    std_logic'image(mymatrix(y,31));
+                    --report "Message " & integer'image(y) & " is " & 
+                    --std_logic'image(mymatrix(y,8)) & 
+                    --std_logic'image(mymatrix(y,9)) & 
+                    --std_logic'image(mymatrix(y,10)) & 
+                    --std_logic'image(mymatrix(y,11)) & 
+                    --std_logic'image(mymatrix(y,12)) & 
+                    --std_logic'image(mymatrix(y,13)) & 
+                    --std_logic'image(mymatrix(y,14)) & 
+                    --std_logic'image(mymatrix(y,15)) &
+                    --std_logic'image(mymatrix(y,24)) & 
+                    --std_logic'image(mymatrix(y,25)) & 
+                    --std_logic'image(mymatrix(y,26)) & 
+                    --std_logic'image(mymatrix(y,27)) & 
+                    --std_logic'image(mymatrix(y,28)) & 
+                    --std_logic'image(mymatrix(y,29)) & 
+                    --std_logic'image(mymatrix(y,30)) & 
+                    --std_logic'image(mymatrix(y,31));
 
                             end loop;
 
