@@ -137,33 +137,32 @@ begin
                         if iticks = 0 then
                         -- We change mymatrix according to the player positions 
                         -- and the ball position
-                            for y in 7 downto 0 loop
                             -- First we set the address
-                                currmessadress := getaddress(y+1);
-                                for mindex in mnumber downto 1 loop
-                                    for bit in 7 downto 0 loop
-                                        mymatrix(y,7+16*(mindex-1)-bit) := currmessadress(bit);
-                                    end loop;
-                                    for bit in 15 downto 8 loop 
-                                        mymatrix(y,16*(mindex-1)+bit) := '0';
-                                    end loop;
-
-                                    for x in 8*mindex-1 downto 8*(mindex-1) loop 
-                                    -- Now we check for both of the ball coords
-                                        if ballypos = y and ballxpos = x then
-                                            mymatrix(y,(x mod 8)+8+16*(mindex-1)) := '1'; 
-                                        end if;
-                                    end loop;
+                            currmessadress := getaddress(currow+1);
+                            for mindex in mnumber downto 1 loop
+                                for bit in 7 downto 0 loop
+                                    mymatrix(currow,7+16*(mindex-1)-bit) := currmessadress(bit);
                                 end loop;
+                                for bit in 15 downto 8 loop 
+                                    mymatrix(currow,16*(mindex-1)+bit) := '0';
+                                end loop;
+
+                                for x in 8*mindex-1 downto 8*(mindex-1) loop 
+                                    -- Now we check for both of the ball coords
+                                    if ballypos = currow and ballxpos = x then
+                                        mymatrix(currow,(x mod 8)+8+16*(mindex-1)) := '1'; 
+                                    end if;
+                                end loop;
+                                end loop; 
 
                                 -- Now we check if the players are in this y
                                 -- coords
-                                if y >= p1ypos and y < p1ypos+pheight then
-                                    mymatrix(y,8+pxpos) := '1';
+                                if currow >= p1ypos and currow < p1ypos+pheight then
+                                    mymatrix(currow,8+pxpos) := '1';
                                 end if;
 
-                                if y >= p2ypos and y < p2ypos+pheight then
-                                    mymatrix(y,16*mnumber-1-pxpos) := '1';
+                                if currow >= p2ypos and currow < p2ypos+pheight then
+                                    mymatrix(currow,16*mnumber-1-pxpos) := '1';
                                 end if;
 
                     --report "Message " & integer'image(y) & " is " & 
@@ -183,8 +182,6 @@ begin
                     --std_logic'image(mymatrix(y,29)) & 
                     --std_logic'image(mymatrix(y,30)) & 
                     --std_logic'image(mymatrix(y,31));
-
-                            end loop;
 
                         -- state 2
                         elsif iticks = 1 then 
