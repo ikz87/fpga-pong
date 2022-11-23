@@ -1,13 +1,13 @@
 v 4
-file . "graphics.vhdl" "4a123eb2f50b6d55b4475f07ec4f73f4800c59a6" "20221122200500.404":
-  entity graphics at 1( 0) + 0 on 687;
-  architecture behav of graphics at 32( 597) + 0 on 688;
-file . "pong_toptb.vhdl" "1de9c3c17bd5384989e85c394fb664027f619007" "20221122200500.616":
-  entity pongtoptb at 1( 0) + 0 on 691;
-  architecture sim of pongtoptb at 8( 104) + 0 on 692;
-file . "pong_top.vhdl" "f0e7edc4dcea349c94ab32f480e993cf31c78084" "20221122200500.514":
-  entity pongtop at 1( 0) + 0 on 689;
-  architecture behav of pongtop at 32( 630) + 0 on 690;
+file . "graphics.vhdl" "5d9dd9b020496254751074bf0f21f2ada65cee28" "20221123045132.982":
+  entity graphics at 1( 0) + 0 on 767;
+  architecture behav of graphics at 32( 597) + 0 on 768;
+file . "pong_toptb.vhdl" "1de9c3c17bd5384989e85c394fb664027f619007" "20221123045133.221":
+  entity pongtoptb at 1( 0) + 0 on 771;
+  architecture sim of pongtoptb at 8( 104) + 0 on 772;
+file . "pong_top.vhdl" "0ae4814462d430b623f9aa33422a4a27cfcd8a2b" "20221123045133.130":
+  entity pongtop at 1( 0) + 0 on 769;
+  architecture behav of pongtop at 30( 563) + 0 on 770;
 file . "graphics1matrix.vhdl" "74eb75c7860517f465b4457b89e849a5975f80b8" "20221122073640.146":
   entity graphics1m at 1( 0) + 0 on 621;
   architecture behav of graphics1m at 32( 599) + 0 on 622;

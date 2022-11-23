@@ -11,7 +11,7 @@ entity graphics is
 port(
     -- Clock and reset 
     clk : in std_logic;
-    iclk : inout std_logic := '0';
+    gclk : inout std_logic := '0';
     nrst : in std_logic;
 
     -- Player positions 
@@ -69,19 +69,20 @@ begin
         if rising_edge(clk) then 
             if nrst = '0' then
                 -- Here we reset every important variable 
-                iclk <= '0';
+                gclk <= '0';
                 iticks <= 0;
                 currow <= 0;
                 ticks <= 0;
                 ison <= '0';
+                isable <= '0';
                 MOSI <= '1';
                 NCS <= '1';
             else
                 ticks <= ticks + 1;
                 if ticks = divisor then 
                     ticks <= 0;
-                    iclk <= not iclk;
-                    if iclk = '0' then
+                    gclk <= not gclk;
+                    if gclk = '0' then
                     iticks <= iticks + 1;
                     -- First we turn on the matrix 
                     if ison = '0' then
@@ -95,11 +96,9 @@ begin
                             ison <= '1';
                             iticks <= 0;
                         end if;
-                    else
 
                     -- Then we abilitate multiple rows 
-
-                    if isable = '0' then
+                    elsif isable = '0' then
                         if iticks = 0 then 
                             NCS <= '0';
                             MOSI <= abilitate((mwidth-iticks) mod 16);
@@ -110,8 +109,8 @@ begin
                             isable <= '1';
                             iticks <= 0;
                         end if;
-                    end if;
-                    -- Here we will implement the rest of the communication 
+                    else
+                    -- Here we will implement the rest of he communication 
                     -- with the led matrix 
                     -- The whole communication will consist of 4 states
                     -- state 1 (iticks = 0)
@@ -175,7 +174,7 @@ begin
                     --std_logic'image(mymatrix(y,12)) & 
                     --std_logic'image(mymatrix(y,13)) & 
                     --std_logic'image(mymatrix(y,14)) & 
-                    --std_logic'image(mymatrix(y,15)) &
+                    --std_logic'image(mymatrix(y,15)); -- &
                     --std_logic'image(mymatrix(y,24)) & 
                     --std_logic'image(mymatrix(y,25)) & 
                     --std_logic'image(mymatrix(y,26)) & 

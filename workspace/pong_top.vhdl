@@ -5,13 +5,12 @@ use ieee.numeric_std.all;
 entity pongtop is 
     generic(
     -- Clock frequency
-    clf : integer
+    clf : integer := 50e6
            );
     port(
     -- Clock and reset
     clk : inout std_logic;
     nrst : inout std_logic;
-    iclk : inout std_logic;
         
     -- Player inputs 
     -- Player 1
@@ -22,11 +21,10 @@ entity pongtop is
     p2up : in std_logic;
     p2down : in std_logic;
 
-    -- Position inoutputs 
-    p1ypos : inout integer := 0; 
-    p2ypos : inout integer := 0; 
-    ballxpos : inout integer := 0;
-    ballypos : inout integer := 0);
+    -- SPI ports 
+    NCS : out std_logic := '1';
+    MOSI : out std_logic := '0';
+    gclk : inout std_logic := '0');
 end entity;
 
 architecture behav of pongtop is 
@@ -40,8 +38,9 @@ architecture behav of pongtop is
     end function;
 
     -- Counting clock ticks 
-    signal ticks : integer;
-    signal divisor : integer := 300; 
+    signal ticks : integer := 0;
+    signal iclk : std_logic := '0';
+    signal divisor : integer := 100; 
 
 
     -- Screen dimension dependant properties
@@ -52,6 +51,12 @@ architecture behav of pongtop is
     constant mnumber : integer := 2; 
     constant p1xpos : integer := 1;
     constant p2xpos : integer := screenwidth*mnumber - 2;
+
+    -- Position inoutputs     
+    signal p1ypos : integer := 0;     
+    signal p2ypos : integer := 0;     
+    signal ballxpos : integer := 0;    
+    signal ballypos : integer := 0; 
 
     -- Debugging 
     type ballstates is (moving, collidedleft, collidedup, collidedright,
@@ -68,7 +73,11 @@ begin
         p2ypos => p2ypos,
         
         ballxpos => ballxpos,
-        ballypos => ballypos
+        ballypos => ballypos,
+
+        NCS => NCS,
+        MOSI => MOSI,
+        gclk => gclk
     );
     process(clk) is 
         -- Redundant variables to make position calculations instant 
