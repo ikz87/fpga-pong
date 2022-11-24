@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity graphics is 
     generic(
-    clf : integer := 50e6
+    clf : integer
 );
 
 port(
@@ -110,6 +110,7 @@ begin
                             iticks <= 0;
                         end if;
                     else
+
 
                         if iticks = 0 then
                             currmessadress := getaddress(currow+1);
