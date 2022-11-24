@@ -4,19 +4,24 @@ use ieee.numeric_std.all;
 
 entity graphics is 
     generic(
-    clf : integer := 50e6
+    -- Clock frequency 
+    clf : integer
 );
 
 port(
+    -- Clock and reset 
     clk : in std_logic;
     nrst : in std_logic;
 
+    -- Player positions 
     p1ypos : in integer := 0;
     p2ypos : in integer := 0;
 
+    -- Ball position 
     ballxpos : in integer := 0;
     ballypos : in integer := 0;
 
+    -- SPI ports 
     NCS : out std_logic := '1';
     MOSI : out std_logic := '0';
     gclk : inout std_logic := '0'
@@ -29,6 +34,7 @@ architecture behav of graphics is
         return std_logic_vector( to_unsigned(i, 8));
     end function;
 
+    -- SPI stuff
     signal currow : integer := 0;
     signal ison : std_logic := '0';
     signal isscanning : std_logic := '0';
@@ -37,10 +43,12 @@ architecture behav of graphics is
     constant scanon : std_logic_vector (15 downto 0) := "0000101100000111";
     constant decodingoff : std_logic_vector (15 downto 0) := "0000100100000000";
 
+    -- Counting clock ticks
     signal ticks : integer := 0;
     signal iticks : integer := 0;
     constant divisor : integer := 12e3;
 
+    -- Screen dimension dependant properties 
     constant screenwidth : integer := 8;    
     constant screenheight : integer := 8;    
     constant pxpos : integer := 1;    
@@ -50,14 +58,18 @@ architecture behav of graphics is
     constant hmwidth : integer := 8*mnumber-1;
 begin
     process(clk) is
+    -- Array to keep track of every row and column    
+    --                      columns    16*m# bit message (address+data)    
     type matrix is array (7 downto 0, mwidth downto 0) of std_logic;
     variable mymatrix : matrix ;
 
 
+    -- Buffer for SPI adresses 
     variable currmessadress : std_logic_vector (7 downto 0);
     begin
         if rising_edge(clk) then 
             if nrst = '0' then
+                -- Here we reset every important variable 
                 gclk <= '0';
                 iticks <= 0;
                 currow <= 0;
@@ -74,6 +86,7 @@ begin
                     gclk <= not gclk;
                     if gclk = '0' then
                     iticks <= iticks + 1;
+                    -- First we enable scanning multiple rows
                     if isscanning = '0' then
                         if iticks = 0 then 
                             NCS <= '0';
@@ -86,6 +99,7 @@ begin
                             iticks <= 0;
                         end if;
 
+                    -- Then we disable bcd decoding
                     elsif isndecoding = '0' then
                         if iticks = 0 then 
                             NCS <= '0';
@@ -98,6 +112,7 @@ begin
                             iticks <= 0;
                         end if;
 
+                    -- Finally, we turn on the chip
                     elsif ison = '0' then 
                         if iticks = 0 then 
                             NCS <= '0';
@@ -111,7 +126,34 @@ begin
                         end if;
                     else
 
+                    -- Here we will implement the rest of he communication 
+                    -- with the led matrix 
+                    -- The whole communication will consist of 4 states
+                    -- state 1 (iticks = 0)
+                    --      We put whatever info is in the position signals 
+                    --      in the mymatrix variable     
+                    -- state 2 (iticks = 1)
+                    --      We poll low through the NCS to say to the slave 
+                    --      a message is gonna be sent. At the same time we 
+                    --      send the first bit of currow
+                    -- state 3 (iticks 2 through 9) 
+                    --      We send the rest of the bits of the current mymatrix
+                    --      row to the slave 
+                    -- state 4 (iticks = 10) 
+                    --      We poll high through the NCS to end the message
+                    -- That's one message sent, we will have to send 8 of them
+                    -- (one for each led row). This will be done by adding to a 
+                    -- variable called currow each time a message is sent 
+                    -- (on state 4)
+                    -- Note that the tick values given in this comment are for
+                    -- controlling exactly 1 led matrix. These numbers can 
+                    -- change depending on the number of matrices used
+
+                    -- state 1 
                         if iticks = 0 then
+                        -- We change mymatrix according to the player positions 
+                        -- and the ball position
+                            -- First we set the address
                             currmessadress := getaddress(currow+1);
                             for mindex in mnumber downto 1 loop
                                 for bit in 7 downto 0 loop
@@ -122,12 +164,15 @@ begin
                                 end loop;
 
                                 for x in 8*mindex-1 downto 8*(mindex-1) loop 
+                                    -- Now we check for both of the ball coords
                                     if ballypos = currow and ballxpos = x then
                                         mymatrix(currow,(x mod 8)+8+16*(mindex-1)) := '1'; 
                                     end if;
                                 end loop;
                                 end loop; 
 
+                                -- Now we check if the players are in this y
+                                -- coords
                                 if currow >= p1ypos and currow < p1ypos+pheight then
                                     mymatrix(currow,8+pxpos) := '1';
                                 end if;
@@ -136,13 +181,16 @@ begin
                                     mymatrix(currow,16*mnumber-1-pxpos) := '1';
                                 end if;
 
+                        -- state 2
                         elsif iticks = 1 then 
                             NCS <= '0';
                             MOSI <= mymatrix(currow, iticks-1);
 
+                        -- state 3 
                         elsif iticks <= mwidth + 1 then 
                             MOSI <= mymatrix(currow, iticks-1);
 
+                        -- state 4
                         elsif iticks = mwidth + 2 then 
                             NCS <= '1';
                             iticks <= 0;
