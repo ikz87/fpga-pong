@@ -133,7 +133,7 @@ begin
                         if ballpreypos >= p2preypos and 
                         ballpreypos <= p2preypos + pheight - 1 then 
                             ballprexpos := p2xpos - 1; 
-                           ballxspeed := - ballxspeed;
+                            ballxspeed := - ballxspeed;
                         end if;
                     elsif ballprexpos > screenwidth*mnumber - 1 then
                     ballprexpos := screenwidth*mnumber / 2 - 1;
